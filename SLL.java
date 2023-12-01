@@ -17,7 +17,7 @@ class SLL {
             size++;
         }
     }
-
+    // if node is not present it will create a newNode and head will be assigned to it.
     public void addFirst(String data) {
         Node newNode = new Node(data);
         newNode.next = head;

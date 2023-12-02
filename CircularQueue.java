@@ -72,19 +72,24 @@ public class CircularQueue {
             int i = front;
             while (i != rear) {
                 System.out.print(queue[i] + " ");
-                i = (i + 1) % size;  //increase the pointer
+                i = (i + 1) % size;  //increase the pointer we have taken this modulo op so that whenever the pointer reaches end of queue so after incrementing the pointer it will perform the modulo operation and the remainder will be 0 so the pointer will point back to the 0th index position which is 0.
             }
             System.out.println();
         }
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+
+        //create the object of scnner class
+        Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter the capacity of the circular queue:");
-        int capacity = scanner.nextInt();
+        //take the size in capacity vaiable by scanning 
+        int capacity = sc.nextInt();
 
-        CircularQueue circularQueue = new CircularQueue(capacity);
+        //create obj of circular queue by passing capacity in parameter
+        CircularQueue cq = new CircularQueue(capacity);
+
 
         while (true) {
             System.out.println("Choose an option:");
@@ -93,21 +98,22 @@ public class CircularQueue {
             System.out.println("3. Display");
             System.out.println("4. Exit");
 
-            int choice = scanner.nextInt();
+            //scan and store the user input in choice variable
+            int choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
                     System.out.println("Enter the element to enqueue:");
-                    int enqueueElement = scanner.nextInt();
-                    circularQueue.enqueue(enqueueElement);
+                    int enqueueElement = sc.nextInt();
+                    cq.enqueue(enqueueElement);
                     break;
 
                 case 2:
-                    circularQueue.dequeue();
+                    cq.dequeue();
                     break;
 
                 case 3:
-                    circularQueue.display();
+                    cq.display();
                     break;
 
                 case 4:

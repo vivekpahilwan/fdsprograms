@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Prac12 {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
         // Creating a Priority Queue
         PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
@@ -19,12 +19,12 @@ public class Prac12 {
             System.out.println("3. Print elements");
             System.out.println("4. Exit");
 
-            int choice = scanner.nextInt();
+            int choice = sc.nextInt();
 
             switch (choice) {
                 case 1:
                     System.out.println("Enter the element to enqueue:");
-                    int enqueueElement = scanner.nextInt();
+                    int enqueueElement = sc.nextInt();
                     priorityQueue.offer(enqueueElement);
                     System.out.println(enqueueElement + " enqueued successfully.");
                     break;

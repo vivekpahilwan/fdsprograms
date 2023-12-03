@@ -73,14 +73,14 @@ class SLL {
             return;
         }
 
-        Node currNode = head;
+        Node secondLast = head;
         Node lastNode = head.next;
         while (lastNode.next != null) {
-            currNode = currNode.next;
+            secondLast = secondLast.next;
             lastNode = lastNode.next;
         }
 
-        currNode.next = null;
+        secondLast.next = null;
     }
 
     public int getSize() {

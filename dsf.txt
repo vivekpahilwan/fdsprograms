@@ -1,0 +1,2000 @@
+DISCLAIMER - WRITE AT YOUR OWN RISK !!
+
+ASSIGNMENT 1 - Construct an expression tree from postfix/prefix expression and perform recursive inorder, preorder
+and post order traversals. For expression tree, perform non-recursive inorder, preorder and post order
+traversals
+
+
+import java.util.Stack;
+
+class Node {
+    String data;
+    Node left, right;
+
+    public Node(String item) {
+        data = item;
+        left = right = null;
+    }
+}
+
+public class ExpressionTree {
+    private Node root;
+
+    public ExpressionTree() {
+        root = null;
+    }
+
+    private boolean isOperator(String c) {
+        return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/");
+    }
+
+    public void constructTreeFromPostfix(String postfix) {
+        String[] tokens = postfix.split("\\s+");
+        Stack<Node> stack = new Stack<>();
+
+        for (String token : tokens) {
+            if (!isOperator(token)) {
+                Node operandNode = new Node(token);
+                stack.push(operandNode);
+            } else {
+                Node operatorNode = new Node(token);
+                Node operand2 = stack.pop();
+                Node operand1 = stack.pop();
+
+                operatorNode.right = operand2;
+                operatorNode.left = operand1;
+
+                stack.push(operatorNode);
+            }
+        }
+
+        root = stack.pop();
+    }
+
+    public void recursiveInorderTraversal(Node root) {
+        if (root != null) {
+            recursiveInorderTraversal(root.left);
+            System.out.print(root.data + " ");
+            recursiveInorderTraversal(root.right);
+        }
+    }
+
+    public void recursivePreorderTraversal(Node root) {
+        if (root != null) {
+            System.out.print(root.data + " ");
+            recursivePreorderTraversal(root.left);
+            recursivePreorderTraversal(root.right);
+        }
+    }
+
+    public void recursivePostorderTraversal(Node root) {
+        if (root != null) {
+            recursivePostorderTraversal(root.left);
+            recursivePostorderTraversal(root.right);
+            System.out.print(root.data + " ");
+        }
+    }
+
+    public void nonRecursiveInorderTraversal() {
+        Stack<Node> stack = new Stack<>();
+        Node current = root;
+
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+
+            current = stack.pop();
+            System.out.print(current.data + " ");
+
+            current = current.right;
+        }
+    }
+
+    public void nonRecursivePreorderTraversal() {
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            Node current = stack.pop();
+            System.out.print(current.data + " ");
+
+            if (current.right != null) {
+                stack.push(current.right);
+            }
+
+            if (current.left != null) {
+                stack.push(current.left);
+            }
+        }
+    }
+
+    public void nonRecursivePostorderTraversal() {
+        Stack<Node> stack = new Stack<>();
+        stack.push(root);
+
+        Stack<String> resultStack = new Stack<>();
+
+        while (!stack.isEmpty()) {
+            Node current = stack.pop();
+            resultStack.push(current.data);
+
+            if (current.left != null) {
+                stack.push(current.left);
+            }
+
+            if (current.right != null) {
+                stack.push(current.right);
+            }
+        }
+
+        while (!resultStack.isEmpty()) {
+            System.out.print(resultStack.pop() + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        ExpressionTree tree = new ExpressionTree();
+        String postfixExpression = "3 4 5 * +";
+        tree.constructTreeFromPostfix(postfixExpression);
+
+        System.out.println("Recursive Inorder Traversal:");
+        tree.recursiveInorderTraversal(tree.root);
+        System.out.println();
+
+        System.out.println("Recursive Preorder Traversal:");
+        tree.recursivePreorderTraversal(tree.root);
+        System.out.println();
+
+        System.out.println("Recursive Postorder Traversal:");
+        tree.recursivePostorderTraversal(tree.root);
+        System.out.println();
+
+        System.out.println("Non-Recursive Inorder Traversal:");
+        tree.nonRecursiveInorderTraversal();
+        System.out.println();
+
+        System.out.println("Non-Recursive Preorder Traversal:");
+        tree.nonRecursivePreorderTraversal();
+        System.out.println();
+
+        System.out.println("Non-Recursive Postorder Traversal:");
+        tree.nonRecursivePostorderTraversal();
+        System.out.println();
+    }
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SIMPLE IMPLEMENTATION OF TRAVERSAL 
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
+
+public class BinarySearchTree {
+
+    private Node root;
+
+    public BinarySearchTree() {
+        root = null;
+    }
+
+    public void insert(int data) {
+        root = insertHelper(root, data);
+    }
+
+    private Node insertHelper(Node node, int data) {
+        if (node == null) {
+            return new Node(data);
+        }
+
+        if (data < node.data) {
+            node.left = insertHelper(node.left, data);
+        } else if (data > node.data) {
+            node.right = insertHelper(node.right, data);
+        }
+        // handle duplicates (optional): update node value or ignore
+
+        return node;
+    }
+
+    // Recursive Traversals
+    public void recursiveInOrderTraversal(Node node) {
+        if (node != null) {
+            recursiveInOrderTraversal(node.left);
+            System.out.print(node.data + " ");
+            recursiveInOrderTraversal(node.right);
+        }
+    }
+
+    public void recursivePreOrderTraversal(Node node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            recursivePreOrderTraversal(node.left);
+            recursivePreOrderTraversal(node.right);
+        }
+    }
+
+    public void recursivePostOrderTraversal(Node node) {
+        if (node != null) {
+            recursivePostOrderTraversal(node.left);
+            recursivePostOrderTraversal(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+
+    // Non-Recursive Traversals
+    public void nonRecursiveInOrderTraversal() {
+        Node current = root;
+        java.util.Stack<Node> stack = new java.util.Stack<>();
+
+        while (current != null || !stack.isEmpty()) {
+            while (current != null) {
+                stack.push(current);
+                current = current.left;
+            }
+
+            current = stack.pop();
+            System.out.print(current.data + " ");
+
+            current = current.right;
+        }
+    }
+
+    public void nonRecursivePreOrderTraversal() {
+        java.util.Stack<Node> stack = new java.util.Stack<>();
+        stack.push(root);
+
+        while (!stack.isEmpty()) {
+            Node current = stack.pop();
+            System.out.print(current.data + " ");
+
+            if (current.right != null) {
+                stack.push(current.right);
+            }
+
+            if (current.left != null) {
+                stack.push(current.left);
+            }
+        }
+    }
+
+    public void nonRecursivePostOrderTraversal() {
+      java.util.Stack<Node> stack1 = new java.util.Stack<>();
+      java.util.Stack<Node> stack2 = new java.util.Stack<>(); // to store in postorder
+  
+      stack1.push(root);
+  
+      while (!stack1.isEmpty()) {
+        Node current = stack1.pop();
+        stack2.push(current); // push for postorder result
+  
+        if (current.left != null) {
+          stack1.push(current.left);
+        }
+  
+        if (current.right != null) {
+          stack1.push(current.right);
+        }
+      }
+  
+      while (!stack2.isEmpty()) {
+        System.out.print(stack2.pop().data + " ");
+      }
+    }
+
+
+    public static void main(String[] args) {
+        BinarySearchTree tree = new BinarySearchTree();
+        tree.insert(50);
+        tree.insert(30);
+        tree.insert(20);
+        tree.insert(40);
+        tree.insert(70);
+        tree.insert(60);
+        tree.insert(80);
+      
+        System.out.println("Recursive InOrder Traversal:");
+        tree.recursiveInOrderTraversal(tree.root);
+        System.out.println();
+      
+        System.out.println("Recursive PreOrder Traversal:");
+        tree.recursivePreOrderTraversal(tree.root);
+        System.out.println();
+      
+        System.out.println("Recursive PostOrder Traversal:");
+        tree.recursivePostOrderTraversal(tree.root);
+        System.out.println();
+      
+        System.out.println("Non-Recursive InOrder Traversal:");
+        tree.nonRecursiveInOrderTraversal();
+        System.out.println();
+      
+        System.out.println("Non-Recursive PreOrder Traversal:");
+        tree.nonRecursivePreOrderTraversal();
+        System.out.println();
+      
+        System.out.println("Non-Recursive PostOrder Traversal:");
+        tree.nonRecursivePostOrderTraversal();
+        System.out.println();
+      }
+      
+
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ASSIGNMENT 2 - Create a binary search tree (BST) of and perform following operations: i) Insert ii) Display inorder iii)
+Search a node iv) Find height of the tree v) level wise display iv) Delete v) Mirror
+
+
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+// NODE
+class TreeNode {
+    int data;
+    TreeNode left, right;
+
+    public TreeNode(int data) {
+        this.data = data;
+        this.left = this.right = null;
+    }
+}
+
+class BinarySearchTree {
+    private TreeNode root;
+
+    public BinarySearchTree() {
+        this.root = null;
+    }
+
+    // Insert function
+    public void insert(int data) {
+        root = insertRecursive(root, data);
+    }
+
+    // Recursive insert
+    private TreeNode insertRecursive(TreeNode root, int data) {
+        if (root == null) {
+            return new TreeNode(data);
+        }
+
+        if (data < root.data) {
+            root.left = insertRecursive(root.left, data);
+        } else if (data > root.data) {
+            root.right = insertRecursive(root.right, data);
+        }
+
+        return root;
+    }
+
+    // Inorder
+    public void displayInorder() {
+        if (root == null) {
+            System.out.println("The tree is empty.");
+        } else {
+            System.out.print("Inorder Traversal: ");
+            displayInorderRecursive(root);
+            System.out.println();
+        }
+    }
+
+    // Inorder recursive
+    private void displayInorderRecursive(TreeNode root) {
+        if (root != null) {
+            displayInorderRecursive(root.left);
+            System.out.print(root.data + " ");
+            displayInorderRecursive(root.right);
+        }
+    }
+
+    // Search a node
+    public boolean search(int data) {
+        return searchRecursive(root, data);
+    }
+
+    private boolean searchRecursive(TreeNode root, int data) {
+        if (root == null) {
+            return false;
+        }
+
+        if (root.data == data) {
+            return true;
+        } else if (data < root.data) {
+            return searchRecursive(root.left, data);
+        } else {
+            return searchRecursive(root.right, data);
+        }
+    }
+
+    // Find height of the tree
+    public int findHeight() {
+        return findHeightRecursive(root);
+    }
+
+    private int findHeightRecursive(TreeNode root) {
+        if (root == null) {
+            return -1; // Height of an empty tree is -1
+        }
+
+        int leftHeight = findHeightRecursive(root.left);
+        int rightHeight = findHeightRecursive(root.right);
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    // Level-wise display
+    public void levelOrder() {
+        if (root == null) {
+            System.out.println("The tree is empty.");
+            return;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        System.out.println("Level-wise Display:");
+        while (!queue.isEmpty()) {
+            TreeNode current = queue.poll();
+            System.out.print(current.data + " ");
+
+            if (current.left != null) {
+                queue.offer(current.left);
+            }
+            if (current.right != null) {
+                queue.offer(current.right);
+            }
+        }
+        System.out.println();
+    }
+
+    // Delete a node
+    public void delete(int data) {
+        root = deleteRecursive(root, data);
+    }
+
+    private TreeNode deleteRecursive(TreeNode root, int data) {
+        if (root == null) {
+            return null;
+        }
+
+        if (data < root.data) {
+            root.left = deleteRecursive(root.left, data);
+        } else if (data > root.data) {
+            root.right = deleteRecursive(root.right, data);
+        } else {
+            // Node to be deleted found
+
+            // Case 1: No child or only one child
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            }
+
+            // Case 2: Two children
+            root.data = minValue(root.right); // Find inorder successor
+            root.right = deleteRecursive(root.right, root.data); // Delete the inorder successor
+        }
+
+        return root;
+    }
+
+    // Find minimum value in a subtree (inorder successor)
+    private int minValue(TreeNode root) {
+        int minv = root.data;
+        while (root.left != null) {
+            minv = root.left.data;
+            root = root.left;
+        }
+        return minv;
+    }
+
+    // Mirror the tree
+    public void mirror() {
+        root = mirrorRecursive(root);
+    }
+
+    private TreeNode mirrorRecursive(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        // Swap left and right subtrees
+        TreeNode temp = root.left;
+        root.left = mirrorRecursive(root.right);
+        root.right = mirrorRecursive(temp);
+
+        return root;
+    }
+}
+
+public class BST {
+    public static void main(String[] args) {
+        BinarySearchTree bst = new BinarySearchTree();
+        Scanner scanner = new Scanner(System.in);
+
+        int choice;
+        do {
+            System.out.println("\nBinary Search Tree Operations:");
+            System.out.println("1. Insert");
+            System.out.println("2. Display Inorder");
+            System.out.println("3. Search a Node");
+            System.out.println("4. Find Height of the Tree");
+            System.out.println("5. Level-wise Display");
+            System.out.println("6. Delete a Node");
+            System.out.println("7. Mirror the Tree");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value to insert: ");
+                    int insertValue = scanner.nextInt();
+                    bst.insert(insertValue);
+                    System.out.println("Value inserted successfully.");
+                    break;
+                case 2:
+                    System.out.println("Inorder Traversal:");
+                    bst.displayInorder();
+                    break;
+                case 3:
+                    System.out.print("Enter value to search: ");
+                    int searchValue = scanner.nextInt();
+                    if (bst.search(searchValue)) {
+                        System.out.println("Node found in the tree.");
+                    } else {
+                        System.out.println("Node not found in the tree.");
+                    }
+                    break;
+                case 4:
+                    System.out.println("Height of the Tree: " + bst.findHeight());
+                    break;
+                case 5:
+                    bst.levelOrder();
+                    break;
+                case 6:
+                    System.out.print("Enter value to delete: ");
+                    int deleteValue = scanner.nextInt();
+                    bst.delete(deleteValue);
+                    System.out.println("Node deleted successfully.");
+                    break;
+                case 7:
+                    bst.mirror();
+                    System.out.println("Tree mirrored successfully.");
+                    break;
+                case 8:
+                    System.out.println("Exiting the program. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        } while (choice != 8);
+
+        scanner.close();
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ASSIGNMENT 3 - Construct an inorder threaded binary search tree. Traverse threaded binary tree it in inorder and preorder.
+
+
+import java.util.Scanner;
+
+class TreeNode {
+    int val;
+    TreeNode left, right;
+    boolean isThreaded;
+    TreeNode inorderSuccessor;
+
+    public TreeNode(int val) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+        this.isThreaded = false;
+        this.inorderSuccessor = null;
+    }
+}
+
+class ThreadedBinarySearchTree {
+    TreeNode root;
+
+    public ThreadedBinarySearchTree() {
+        this.root = null;
+    }
+
+    // Insertion in a Binary Search Tree
+    public void insert(int val) {
+        root = insertRecursive(root, val);
+    }
+
+    private TreeNode insertRecursive(TreeNode root, int val) {
+        if (root == null)
+            return new TreeNode(val);
+
+        if (val < root.val) {
+            root.left = insertRecursive(root.left, val);
+        } else if (val > root.val) {
+            root.right = insertRecursive(root.right, val);
+        }
+        return root;
+    }
+
+    // Thread the Binary Tree Inorder
+    public void threadInorder() {
+        TreeNode prev = null;
+        threadInorderRecursive(root, prev);
+    }
+
+    private void threadInorderRecursive(TreeNode root, TreeNode prev) {
+        if (root != null) {
+            threadInorderRecursive(root.left, prev);
+
+            if (prev != null && prev.right == null) {
+                prev.right = root;
+                prev.isThreaded = true;
+            }
+            prev = root;
+
+            if (root.right != null && !root.isThreaded) {
+                threadInorderRecursive(root.right, prev);
+            }
+        }
+    }
+
+    // Inorder Traversal of Threaded Binary Tree
+    public void inorderTraversal() {
+        TreeNode current = leftMost(root);
+        while (current != null) {
+            System.out.print(current.val + " ");
+            if (current.isThreaded)
+                current = current.right;
+            else
+                current = leftMost(current.right);
+        }
+        System.out.println();
+    }
+
+    // Helper method to find the leftmost node
+    private TreeNode leftMost(TreeNode node) {
+        if (node == null)
+            return null;
+        while (node.left != null)
+            node = node.left;
+        return node;
+    }
+
+    // Preorder Traversal of Threaded Binary Tree
+    public void preorderTraversal() {
+        preorderRecursive(root);
+        System.out.println();
+    }
+
+    private void preorderRecursive(TreeNode root) {
+        if (root != null) {
+            System.out.print(root.val + " ");
+            preorderRecursive(root.left);
+            preorderRecursive(root.right);
+        }
+    }
+}
+
+public class ThreadedBST {
+    public static void main(String[] args) {
+        ThreadedBinarySearchTree tbst = new ThreadedBinarySearchTree();
+        Scanner scanner = new Scanner(System.in);
+        int choice, val;
+
+        do {
+            System.out.println("\nMenu:");
+            System.out.println("1. Insert an element");
+            System.out.println("2. Thread the tree inorder");
+            System.out.println("3. Traverse the tree - Inorder");
+            System.out.println("4. Traverse the tree - Preorder");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the value to insert: ");
+                    val = scanner.nextInt();
+                    tbst.insert(val);
+                    break;
+                case 2:
+                    tbst.threadInorder();
+                    System.out.println("Tree threaded inorder");
+                    break;
+                case 3:
+                    System.out.print("Inorder Traversal: ");
+                    tbst.inorderTraversal();
+                    break;
+                case 4:
+                    System.out.print("Preorder Traversal: ");
+                    tbst.preorderTraversal();
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        } while (choice != 5);
+
+        scanner.close();
+    }
+}
+ 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
+
+ASSIGNMENT 4 - Create a graph using adjacency list representation. Perform graph traversal using using BFS and DFS
+
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class GraphUsingAdjacencyMatrix {
+    public int[][] adjacencyMatrix;
+     public int numVertices;
+ 
+     public GraphUsingAdjacencyMatrix(int numVertices) {
+         this.numVertices = numVertices;
+         adjacencyMatrix = new int[numVertices][numVertices];
+     }
+    public void addEdge(int source, int destination, int weight) {
+         adjacencyMatrix[source][destination] = weight;
+     }
+   public void printGraph() {
+         System.out.println("Graph (Adjacency Matrix):");
+         for (int i = 0; i < numVertices; i++) {
+             for (int j = 0; j < numVertices; j++) {
+                 System.out.print(adjacencyMatrix[i][j] + " ");
+             }
+             System.out.println();
+         }
+     }
+ 
+     public void dijkstra(int source) {
+         int[] distance = new int[numVertices];
+         boolean[] visited = new boolean[numVertices];
+ 
+         Arrays.fill(distance, Integer.MAX_VALUE);
+         distance[source] = 0;
+ 
+         for (int count = 0; count < numVertices - 1; count++) {
+             int minDistance = Integer.MAX_VALUE;
+             int minIndex = -1;
+ 
+             for (int v = 0; v < numVertices; v++) {
+                 if (!visited[v] && distance[v] < minDistance) {
+                     minDistance = distance[v];
+                     minIndex = v;
+                 }
+             }
+ 
+             visited[minIndex] = true;
+ 
+             for (int v = 0; v < numVertices; v++) {
+                 if (!visited[v] && adjacencyMatrix[minIndex][v] != 0 &&
+                         distance[minIndex] != Integer.MAX_VALUE &&
+                         distance[minIndex] + adjacencyMatrix[minIndex][v] < distance[v]) {
+                     distance[v] = distance[minIndex] + adjacencyMatrix[minIndex][v];
+                 }
+             }
+         }
+ 
+         printShortestPaths(source, distance);
+     }
+ 
+     private void printShortestPaths(int source, int[] distance) {
+         System.out.println("Shortest Distances from Vertex " + source + " to other vertices:");
+         for (int i = 0; i < numVertices; i++) {
+             System.out.println("To Vertex " + i + ": " + distance[i]);
+         }
+     }
+ 
+     public static void main(String[] args) {
+         Scanner scanner = new Scanner(System.in);
+ 
+         System.out.print("Enter the number of vertices: ");
+         int numVertices = scanner.nextInt();
+ 
+         GraphUsingAdjacencyMatrix graph = new GraphUsingAdjacencyMatrix(numVertices);
+         System.out.println("Enter edges in the format: source destination weight");
+ 
+         while (true) {
+             int source = scanner.nextInt();
+             int destination = scanner.nextInt();
+             int weight = scanner.nextInt();
+ 
+             if (source == -1 || destination == -1 || weight == -1) {
+                 break;
+             }
+             if (source < 0 || source >= numVertices || destination < 0 || destination >= numVertices) {
+                 System.out.println("Invalid vertex index. Vertex index should be between 0 and " + (numVertices - 1));
+                 continue;
+             }
+ 
+             graph.addEdge(source, destination, weight);
+         }
+ 
+         graph.printGraph();
+ 
+         System.out.print("Enter the source vertex for Dijkstra's algorithm: ");
+         int sourceVertex = scanner.nextInt();
+ 
+         graph.dijkstra(sourceVertex);
+ 
+         scanner.close();
+     }
+ }
+ 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ASSIGNMENT 4 EASY 
+
+
+import java.util.*;
+
+// Graph class
+class Graph {
+    private int V; // Number of vertices
+    private LinkedList<Integer> adj[]; // Adjacency list
+
+    // Constructor
+    Graph(int v) {
+        V = v;
+        adj = new LinkedList[v];
+        for (int i = 0; i < v; ++i)
+            adj[i] = new LinkedList();
+    }
+
+    // Function to add an edge into the graph
+
+    void addEdge(int v, int w) {
+        adj[v].add(w);
+    }
+
+    // Function to perform BFS traversal starting from vertex v
+    void BFS(int v) {
+        boolean visited[] = new boolean[V];
+        LinkedList<Integer> queue = new LinkedList<Integer>();
+        visited[v] = true;
+        queue.add(v);
+        while (queue.size() != 0) {
+            v = queue.poll();
+            System.out.print(v + " ");
+            Iterator<Integer> i = adj[v].listIterator();
+            while (i.hasNext()) {
+                int n = i.next();
+                if (!visited[n]) {
+                    visited[n] = true;
+                    queue.add(n);
+                }
+            }
+        }
+    }
+
+    // Function to perform DFS traversal starting from vertex v
+
+    void DFS(int v) {
+        boolean visited[] = new boolean[V];
+        DFSUtil(v, visited);
+    }
+
+    // Recursive function for DFS traversal
+    void DFSUtil(int v, boolean visited[]) {
+        visited[v] = true;
+        System.out.print(v + " ");
+        Iterator<Integer> i = adj[v].listIterator();
+        while (i.hasNext()) {
+            int n = i.next();
+            if (!visited[n])
+                DFSUtil(n, visited);
+        }
+    }
+}
+
+// Main class
+public class Main {
+    public static void main(String args[]) {
+        // Create a graph
+        Graph g = new Graph(4);
+        g.addEdge(0, 1);
+        g.addEdge(0, 2);
+        g.addEdge(1, 2);
+        g.addEdge(2, 0);
+        g.addEdge(2, 3);
+        g.addEdge(3, 3);
+
+        System.out.println("BFS Traversal starting from vertex 2:");
+        g.BFS(2);
+        System.out.println();
+
+        System.out.println("DFS Traversal starting from vertex 2:");
+        g.DFS(2);
+        System.out.println();
+    }
+}
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ASSIGNMENT 5 - Use the map of the area around the college as the graph. Identify the prominent land marks as
+nodes and find minimum distance to various land marks from the college as the source. Represent
+this graph using adjacency matrix. Find the shortest path using Dijkstra’s algorithm
+
+
+
+import java.util.*;
+
+class CollegeMap {
+    int m[][];
+    int v, e;
+
+    CollegeMap() {
+        m = new int[20][20];
+        v = 0;
+        e = 0;
+    }
+
+    void readgraph() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter number of vertices");
+        v = sc.nextInt();
+        System.out.println("Enter number of edges");
+        e = sc.nextInt();
+
+        for (int i = 0; i < e; i++) {
+            System.out.println("Enter source, destination, edge weight");
+            int s = sc.nextInt();
+            int d = sc.nextInt();
+            int w = sc.nextInt();
+
+            m[s][d] = w;
+        }
+    }
+
+    void printgraph() {
+        System.out.println("Graph : ");
+
+        for (int i = 0; i < v; i++) {
+            for (int j = 0; j < v; j++) {
+                if (m[i][j] != 0) {
+                    System.out.println("From " + i + " to " + j + " : " + m[i][j]);
+                }
+            }
+        }
+    }
+
+    // Dijkstra's Algorithm to find the shortest path from source to destination
+    void dijkstra(int source, int destination) {
+        int[] dist = new int[v];
+        boolean[] visited = new boolean[v];
+
+        // Initialize distances to infinity and visited to false
+        for (int i = 0; i < v; i++) {
+            dist[i] = Integer.MAX_VALUE;
+            visited[i] = false;
+        }
+
+        // Distance of source vertex from itself is always 0
+        dist[source] = 0;
+
+        // Find shortest path for all vertices
+        for (int count = 0; count < v - 1; count++) {
+            int u = minDistance(dist, visited);
+            visited[u] = true;
+
+            // Update dist value of the adjacent vertices
+            for (int i = 0; i < v; i++) {
+                if (!visited[i] && m[u][i] != 0 && dist[u] != Integer.MAX_VALUE &&
+                        dist[u] + m[u][i] < dist[i]) {
+                    dist[i] = dist[u] + m[u][i];
+                }
+            }
+        }
+
+        // Print the shortest distance to destination vertex
+        System.out.println("Shortest distance from " + source + " to " + destination + " is: " + dist[destination]);
+    }
+
+    // Utility method to find the vertex with minimum distance value
+    int minDistance(int[] dist, boolean[] visited) {
+        int min = Integer.MAX_VALUE;
+        int minIndex = -1;
+
+        for (int v = 0; v < this.v; v++) {
+            if (!visited[v] && dist[v] <= min) {
+                min = dist[v];
+                minIndex = v;
+            }
+        }
+        return minIndex;
+    }
+
+    public static void main(String[] args) {
+        CollegeMap gp = new CollegeMap();
+
+        gp.readgraph();
+        gp.printgraph();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter source and destination vertices:");
+        int source = scanner.nextInt();
+        int destination = scanner.nextInt();
+
+        gp.dijkstra(source, destination);
+
+        scanner.close();
+    }
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ASSIGNMENT 6 - A business house has several offices in different countries; they want to lease phone lines to
+connect them with each other and the phone company charges different rent to connect different
+pairs of cities. Business house want to connect all its offices with a minimum total cost.
+Represent using appropriate data structure. Apply Prim’s algorithm to find minimum total cost.
+
+(USE -1 -1 -1 TO EXIT)
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class PrimsAlgorithm {
+    public int[][] adjacencyMatrix;
+    public int numVertices;
+
+    public PrimsAlgorithm(int numVertices) {
+        this.numVertices = numVertices;
+        adjacencyMatrix = new int[numVertices][numVertices];
+    }
+
+    public void addEdge(int source, int destination, int weight) {
+        adjacencyMatrix[source][destination] = weight;
+        adjacencyMatrix[destination][source] = weight; // For undirected graph
+    }
+
+    public void printGraph() {
+        System.out.println("Graph (Adjacency Matrix):");
+        for (int i = 0; i < numVertices; i++) {
+            for (int j = 0; j < numVertices; j++) {
+                System.out.print(adjacencyMatrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void prims(int source) {
+        int[] parent = new int[numVertices];
+        int[] key = new int[numVertices];
+        boolean[] mstSet = new boolean[numVertices];
+        Arrays.fill(key, Integer.MAX_VALUE);
+        Arrays.fill(mstSet, false);
+        key[source] = 0;
+        parent[source] = -1;
+        for (int count = 0; count < numVertices - 1; count++) {
+            int u = minKey(key, mstSet);
+            mstSet[u] = true;
+            for (int v = 0; v < numVertices; v++) {
+                if (adjacencyMatrix[u][v] != 0 && !mstSet[v] && adjacencyMatrix[u][v] < key[v]) {
+                    parent[v] = u;
+                    key[v] = adjacencyMatrix[u][v];
+                }
+            }
+        }
+        printMST(parent);
+    }
+
+    public int minKey(int[] key, boolean[] mstSet) {
+        int min = Integer.MAX_VALUE, minIndex = -1;
+        for (int v = 0; v < numVertices; v++) {
+            if (!mstSet[v] && key[v] < min) {
+                min = key[v];
+                minIndex = v;
+            }
+        }
+        return minIndex;
+    }
+
+    public void printMST(int[] parent) {
+        System.out.println("Minimum Spanning Tree (Prim's Algorithm):");
+        for (int i = 1; i < numVertices; i++) {
+            System.out.println("Edge: " + parent[i] + " - " + i + " Weight: " +
+                    adjacencyMatrix[i][parent[i]]);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of vertices: ");
+        int numVertices = scanner.nextInt();
+        PrimsAlgorithm graph = new PrimsAlgorithm(numVertices);
+        System.out.println("Enter edges in the format: source destination weight");
+        while (true) {
+            int source = scanner.nextInt();
+            int destination = scanner.nextInt();
+            int weight = scanner.nextInt();
+            if (source == -1 || destination == -1 || weight == -1) {
+                break;
+            }
+            if (source < 0 || source >= numVertices || destination < 0 || destination >= numVertices) {
+                System.out.println("Invalid vertex index. Vertex index should be between 0 and " + (numVertices - 1));
+                continue;
+            }
+            graph.addEdge(source, destination, weight);
+        }
+        graph.printGraph();
+        System.out.print("Enter the source vertex for Prim's algorithm: ");
+        int sourceVertex = scanner.nextInt();
+        graph.prims(sourceVertex);
+        scanner.close();
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ASSIGNMENT 7 - Represent any real world graph using adjacency list /adjacency matrix. Find minimum spanning tree
+using Kruskal’s algorithm.
+
+import java.util.*;
+
+class Edge implements Comparable<Edge> {
+    int source, destination, weight;
+
+    public Edge(int source, int destination, int weight) {
+        this.source = source;
+        this.destination = destination;
+        this.weight = weight;
+    }
+
+    @Override
+    public int compareTo(Edge other) {
+        return this.weight - other.weight;
+    }
+}
+
+class Graph {
+    int V;
+    List<Edge> edges;
+
+    public Graph(int V) {
+        this.V = V;
+        edges = new ArrayList<>();
+    }
+
+    public void addEdge(int source, int destination, int weight) {
+        edges.add(new Edge(source, destination, weight));
+    }
+
+    public List<Edge> kruskalMST() {
+        Collections.sort(edges);
+        List<Edge> result = new ArrayList<>();
+        int[] parent = new int[V];
+        for (int i = 0; i < V; i++) {
+            parent[i] = i;
+        }
+        int edgeCount = 0;
+        for (Edge edge : edges) {
+            if (edgeCount == V - 1)
+                break;
+            int sourceParent = find(parent, edge.source);
+            int destParent = find(parent, edge.destination);
+            if (sourceParent != destParent) {
+                result.add(edge);
+                union(parent, sourceParent, destParent);
+                edgeCount++;
+            }
+        }
+        return result;
+    }
+
+    private int find(int[] parent, int vertex) {
+        if (parent[vertex] != vertex)
+            parent[vertex] = find(parent, parent[vertex]);
+        return parent[vertex];
+    }
+
+    private void union(int[] parent, int x, int y) {
+        int xSet = find(parent, x);
+        int ySet = find(parent, y);
+        parent[xSet] = ySet;
+    }
+}
+
+public class KruskalMST {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of vertices: ");
+        int V = scanner.nextInt();
+        Graph graph = new Graph(V);
+        System.out.println("Enter edges in format: source destination weight");
+        System.out.println("For example, for an edge from vertex 0 to vertex 1 with weight 10,");
+        System.out.println("enter: 0 1 10");
+        System.out.println("Enter -1 to stop adding edges.");
+        while (true) {
+            int source = scanner.nextInt();
+            if (source == -1)
+                break;
+            int destination = scanner.nextInt();
+            int weight = scanner.nextInt();
+            graph.addEdge(source, destination, weight);
+        }
+        List<Edge> mst = graph.kruskalMST();
+        System.out.println("Minimum Spanning Tree Edges:");
+        for (Edge edge : mst) {
+            System.out.println(edge.source + " - " + edge.destination + " : " + edge.weight);
+        }
+        scanner.close();
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ASSIGNMENT 8 - Store data of students using hashing function for roll number and implement linear probing using
+chaining without replacement and chaining with replacement algorithm
+
+import java.util.*;
+
+class Student {
+    String name;
+    int rollNumber;
+
+    public Student(String name, int rollNumber) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+    }
+
+    public String toString() {
+        return name + " (" + rollNumber + ")";
+    }
+}
+
+class HashTableWithReplacement {
+    public final int SIZE = 10; // Size of the hash table
+    public List<List<Student>> chains; // Chaining with replacement
+
+    public HashTableWithReplacement() {
+        chains = new ArrayList<>(SIZE);
+        for (int i = 0; i < SIZE; i++) {
+            chains.add(new ArrayList<>());
+        }
+    }
+
+    // Hash function to map roll number to an index
+    public int hash(int rollNumber) {
+        return rollNumber % SIZE;
+    }
+
+    // Insert a student into the hash table
+    public void insert(Student student) {
+        int index = hash(student.rollNumber);
+        chains.get(index).add(student);
+    }
+
+    // Display the hash table along with chains in tabular form
+    public void display() {
+        System.out.println("+--------+----------------------+");
+        System.out.println("| Slot   | Chain                |");
+        System.out.println("+--------+----------------------+");
+        for (int i = 0; i < SIZE; i++) {
+            System.out.printf("| %-6d | %-20s |\n", i, chains.get(i).toString());
+        }
+        System.out.println("+--------+----------------------+");
+    }
+
+    // Search for a student in the hash table
+    public Student search(int rollNumber) {
+        int index = hash(rollNumber);
+        for (Student student : chains.get(index)) {
+            if (student.rollNumber == rollNumber) {
+                return student;
+            }
+        }
+        return null;
+    }
+}
+
+class HashTableWithoutReplacement {
+    public final int SIZE = 10; // Size of the hash table
+    public Student[] students;
+    public boolean[] flags; // Flags to mark if a slot is occupied
+    public List<List<Student>> chains; // Chaining without replacement
+
+    public HashTableWithoutReplacement() {
+        students = new Student[SIZE];
+        flags = new boolean[SIZE];
+        chains = new ArrayList<>(SIZE);
+        for (int i = 0; i < SIZE; i++) {
+            chains.add(new ArrayList<>());
+        }
+    }
+
+    // Hash function to map roll number to an index
+    public int hash(int rollNumber) {
+        return rollNumber % SIZE;
+    }
+
+    // Insert a student into the hash table
+    public void insert(Student student) {
+        int index = hash(student.rollNumber);
+        if (!flags[index]) {
+            students[index] = student;
+            flags[index] = true;
+        } else {
+            chains.get(index).add(student);
+        }
+    }
+
+    // Display the hash table along with flags and chains in tabular form
+    public void display() {
+        System.out.println("+--------+--------------+--------+----------------------+");
+        System.out.println("| Slot   | Flag         | Data   | Chain                |");
+        System.out.println("+--------+--------------+--------+----------------------+");
+        for (int i = 0; i < SIZE; i++) {
+            System.out.printf("| %-6d | %-12s | ", i, flags[i] ? "true" : "false");
+            if (flags[i]) {
+                System.out.printf("%-6s | %-20s |\n", students[i].name + " (" + students[i].rollNumber + ")", chains.get(i).toString());
+            } else {
+                System.out.println("       |                      |");
+            }
+        }
+        System.out.println("+--------+--------------+--------+----------------------+");
+    }
+
+    // Search for a student in the hash table
+    public Student search(int rollNumber) {
+        int index = hash(rollNumber);
+        if (flags[index] && students[index].rollNumber == rollNumber) {
+            return students[index];
+        } else {
+            for (Student student : chains.get(index)) {
+                if (student.rollNumber == rollNumber) {
+                    return student;
+                }
+            }
+        }
+        return null;
+    }
+}
+
+public class HashWithReplacement {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        HashTableWithReplacement tableWithReplacement = new HashTableWithReplacement();
+        HashTableWithoutReplacement tableWithoutReplacement = new HashTableWithoutReplacement();
+
+        boolean exit = false;
+        while (!exit) {
+            System.out.println("Select an option:");
+            System.out.println("1. Insert");
+            System.out.println("2. Search");
+            System.out.println("3. Display");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter student name: ");
+                    String name = scanner.next();
+                    System.out.print("Enter roll number: ");
+                    int rollNumber = scanner.nextInt();
+                    tableWithReplacement.insert(new Student(name, rollNumber));
+                    tableWithoutReplacement.insert(new Student(name, rollNumber));
+                    break;
+                case 2:
+                    System.out.print("Enter roll number to search: ");
+                    int searchRollNumber = scanner.nextInt();
+                    Student foundStudentWithReplacement = tableWithReplacement.search(searchRollNumber);
+                    Student foundStudentWithoutReplacement = tableWithoutReplacement.search(searchRollNumber);
+                    if (foundStudentWithReplacement != null) {
+                        System.out.println("Found student in chaining with replacement: " + foundStudentWithReplacement);
+                    } else {
+                        System.out.println("Student not found in chaining with replacement.");
+                    }
+                    if (foundStudentWithoutReplacement != null) {
+                        System.out.println("Found student in chaining without replacement: " + foundStudentWithoutReplacement);
+                    } else {
+                        System.out.println("Student not found in chaining without replacement.");
+                    }
+                    break;
+                case 3:
+                    System.out.println("Chaining with replacement:");
+                    tableWithReplacement.display();
+                    System.out.println("\nChaining without replacement:");
+                    tableWithoutReplacement.display();
+                    break;
+                case 4:
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 4.");
+            }
+        }
+        scanner.close();
+    }
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ASSIGNMENT 9 - 
+a) The internship is offered to students based on rank obtained in second year of graduation. Create
+suitable non-linear data structure to identify next topper student for internship. (Create max-heap).
+b) Sort the student data in ascending order of grades.
+
+import java.util.*;
+
+// Student class to represent student data
+class Student {
+    int rollNo;
+    double grade;
+
+    public Student(int rollNo, double grade) {
+        this.rollNo = rollNo;
+        this.grade = grade;
+    }
+
+    public String toString() {
+        return "Roll No: " + rollNo + ", Grade: " + grade;
+    }
+}
+
+// MaxHeap class to represent max-heap data structure
+class MaxHeap {
+    List<Student> heap;
+
+    public MaxHeap() {
+        heap = new ArrayList<>();
+    }
+
+    // Method to insert a new student into the max-heap
+    public void insert(Student student) {
+        heap.add(student);
+        int index = heap.size() - 1;
+        while (index > 0) {
+            int parentIndex = (index - 1) / 2;
+            if (heap.get(index).grade > heap.get(parentIndex).grade) {
+                // Swap with parent if current grade is greater
+                Collections.swap(heap, index, parentIndex);
+                index = parentIndex;
+            } else {
+                break;
+            }
+        }
+    }
+
+    // Method to remove the top student from the max-heap
+    public Student removeTop() {
+        if (heap.isEmpty()) {
+            return null;
+        }
+        Student top = heap.get(0);
+        heap.set(0, heap.get(heap.size() - 1));
+        heap.remove(heap.size() - 1);
+        int index = 0;
+        while (true) {
+            int leftChild = 2 * index + 1;
+            int rightChild = 2 * index + 2;
+            int maxIndex = index;
+            if (leftChild < heap.size() && heap.get(leftChild).grade > heap.get(maxIndex).grade) {
+                maxIndex = leftChild;
+            }
+            if (rightChild < heap.size() && heap.get(rightChild).grade > heap.get(maxIndex).grade) {
+                maxIndex = rightChild;
+            }
+            if (maxIndex != index) {
+                Collections.swap(heap, index, maxIndex);
+                index = maxIndex;
+            } else {
+                break;
+            }
+        }
+        return top;
+    }
+
+    // Method to check if the heap is empty
+    public boolean isEmpty() {
+        return heap.isEmpty();
+    }
+}
+
+public class StudentInternship {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of students: ");
+        int numStudents = scanner.nextInt();
+        Student[] students = new Student[numStudents];
+
+        // Input student data
+        for (int i = 0; i < numStudents; i++) {
+            System.out.println("Enter details for Student " + (i + 1) + ":");
+            System.out.print("Roll No: ");
+            int rollNo = scanner.nextInt();
+            System.out.print("Grade: ");
+            double grade = scanner.nextDouble();
+            students[i] = new Student(rollNo, grade);
+        }
+
+        int choice;
+        do {
+            System.out.println("\nMenu:");
+            System.out.println("1. Sort students by grade");
+            System.out.println("2. Find next topper student for internship");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    // Sort the students by grade
+                    sortStudentsByGrade(students);
+                    System.out.println("\nSorted Student Data (Ascending Order of Grades):");
+                    for (Student student : students) {
+                        System.out.println(student);
+                    }
+                    break;
+                case 2:
+                    // Create a max-heap to identify next topper student for internship
+                    MaxHeap maxHeap = new MaxHeap();
+                    for (Student student : students) {
+                        maxHeap.insert(student);
+                    }
+                    System.out.println("\nNext Topper Student for Internship:");
+                    if (!maxHeap.isEmpty()) {
+                        Student nextTopper = maxHeap.removeTop();
+                        System.out.println(nextTopper);
+                    } else {
+                        System.out.println("No students available for internship.");
+                    }
+                    break;
+                case 3:
+                    System.out.println("Exiting program...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please enter a valid option.");
+            }
+        } while (choice != 3);
+
+        scanner.close();
+    }
+
+    // Method to sort the student data in ascending order of grades
+    public static void sortStudentsByGrade(Student[] students) {
+        Arrays.sort(students, Comparator.comparingDouble(s -> s.grade));
+    }
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ASSIGNMENT 10 - Implement an index sequential file for any Database and perform all database operations on it b)iii. Modify a record iv. Delete a record
+
+import java.io.*;
+import java.util.*;
+
+public class IndexSequentialFile {
+    private static final String USER_DATA_FILE = "userData.txt";
+    private static final String INDEX_FILE = "indexFile.txt";
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Initialize the user data and index files
+        initializeFiles();
+
+        while (true) {
+            System.out.println("\n1. Add Record\n2. Display Records\n3. Modify Record\n4. Delete Record\n5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter ID: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter Name: ");
+                    String name = scanner.nextLine();
+                    addRecord(id, name);
+                    break;
+                case 2:
+                    displayRecords();
+                    break;
+                case 3:
+                    System.out.print("Enter ID to modify: ");
+                    int modifyId = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    System.out.print("Enter new Name: ");
+                    String newName = scanner.nextLine();
+                    modifyRecord(modifyId, newName);
+                    break;
+                case 4:
+                    System.out.print("Enter ID to delete: ");
+                    int deleteId = scanner.nextInt();
+                    deleteRecord(deleteId);
+                    break;
+                case 5:
+                    scanner.close();
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice! Please enter a valid option.");
+            }
+        }
+    }
+
+    private static void initializeFiles() {
+        try {
+            File userDataFile = new File(USER_DATA_FILE);
+            File indexFile = new File(INDEX_FILE);
+
+            if (!userDataFile.exists()) {
+                userDataFile.createNewFile();
+            }
+            if (!indexFile.exists()) {
+                indexFile.createNewFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void addRecord(int id, String name) {
+        try (FileWriter fw = new FileWriter(USER_DATA_FILE, true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter pw = new PrintWriter(bw)) {
+            // Append user data to userData.txt
+            pw.println(id + "," + name);
+            pw.flush();
+
+            // Append index to indexFile.txt
+            try (FileWriter fwIndex = new FileWriter(INDEX_FILE, true);
+                 BufferedWriter bwIndex = new BufferedWriter(fwIndex);
+                 PrintWriter pwIndex = new PrintWriter(bwIndex)) {
+                pwIndex.println(id + "," + getFilePointer(id));
+                pwIndex.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static long getFilePointer(int id) {
+    try (RandomAccessFile file = new RandomAccessFile(USER_DATA_FILE, "r")) {
+        String line;
+        long pos = 0;
+        while ((line = file.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length >= 1 && !parts[0].isEmpty() && parts[0].matches("\\d+")) {
+                int currentId = Integer.parseInt(parts[0]);
+                if (currentId == id) {
+                    return pos;
+                }
+            }
+            pos = file.getFilePointer();
+        }
+    } catch (IOException | NumberFormatException e) {
+        e.printStackTrace();
+    }
+    return -1; // Not found or invalid input
+}
+
+
+    private static void displayRecords() {
+        try (BufferedReader br = new BufferedReader(new FileReader(USER_DATA_FILE))) {
+            String line;
+            System.out.println("\nUser Data:");
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void modifyRecord(int id, String newName) {
+        try (RandomAccessFile file = new RandomAccessFile(USER_DATA_FILE, "rw")) {
+            String line;
+            while ((line = file.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (Integer.parseInt(parts[0]) == id) {
+                    file.seek(file.getFilePointer() - line.length() - 2); // Move back to start of the line
+                    file.writeBytes(id + "," + newName + "\n");
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void deleteRecord(int id) {
+        try {
+            File tempFile = new File("tempFile.txt");
+            BufferedReader reader = new BufferedReader(new FileReader(USER_DATA_FILE));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+            String lineToRemove = id + ",";
+            String currentLine;
+
+            while ((currentLine = reader.readLine()) != null) {
+                if (currentLine.contains(lineToRemove)) continue;
+                writer.write(currentLine + System.getProperty("line.separator"));
+            }
+            writer.close();
+            reader.close();
+
+            tempFile.renameTo(new File(USER_DATA_FILE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ASSIGNMENT 11 - Implement direct access file for any Database and perform following operations on it i) Create
+Database ii) Display Database iii) Search a record
+
+CREATE FILE - students.db in same folder
+
+
+import java.io.*;
+import java.util.Scanner;
+
+public class DirectAccessFileDatabase {
+
+    private static final int RECORD_SIZE = 60;
+    private static final int TABLE_SIZE = 100; // Size of the hash table
+    private static final int ID_SIZE = 10;
+    private static final int NAME_SIZE = 20;
+    private static final int HOMETOWN_SIZE = 30;
+
+    public static int hash(String key) {
+        // Simple hashing function using ASCII values
+        int hash = 0;
+        for (int i = 0; i < key.length(); i++) {
+            hash += (int) key.charAt(i);
+        }
+        return hash % TABLE_SIZE;
+    }
+
+    public static void createDatabase(String fileName) {
+        try {
+            RandomAccessFile file = new RandomAccessFile(fileName, "rw");
+            file.setLength(0);
+            file.close();
+            System.out.println("Database created successfully.");
+        } catch (IOException e) {
+            System.out.println("Error creating database: " + e.getMessage());
+        }
+    }
+
+    public static void displayDatabase(String fileName) {
+        try {
+            RandomAccessFile file = new RandomAccessFile(fileName, "r");
+            long numRecords = file.length() / RECORD_SIZE;
+            System.out.println("---- Displaying all records ----");
+            System.out.printf("%-12s%-22s%-28s%n", "ID", "Name", "Hometown");
+            for (int i = 0; i < numRecords; i++) {
+                file.seek(i * RECORD_SIZE);
+                String id = readString(file, ID_SIZE);
+                String name = readString(file, NAME_SIZE);
+                String hometown = readString(file, HOMETOWN_SIZE);
+                System.out.printf("%-12s%-22s%-28s%n", id.trim(), name.trim(), hometown.trim());
+            }
+            file.close();
+            System.out.println("---------------------------------");
+        } catch (IOException e) {
+            System.out.println("Error displaying database: " + e.getMessage());
+        }
+    }
+
+    public static void addRecord(String fileName, String id, String name, String hometown) {
+        try {
+            RandomAccessFile file = new RandomAccessFile(fileName, "rw");
+            int index = hash(id);
+            long offset = index * RECORD_SIZE;
+            file.seek(offset);
+            writeRecord(file, id, name, hometown);
+            file.close();
+            System.out.println("Record added successfully.");
+        } catch (IOException e) {
+            System.out.println("Error adding record: " + e.getMessage());
+        }
+    }
+
+    public static void searchRecord(String fileName, String searchId) {
+        try {
+            RandomAccessFile file = new RandomAccessFile(fileName, "r");
+            int index = hash(searchId);
+            long offset = index * RECORD_SIZE;
+            file.seek(offset);
+            String id = readString(file, ID_SIZE);
+            if (id.trim().equals(searchId)) {
+                String name = readString(file, NAME_SIZE);
+                String hometown = readString(file, HOMETOWN_SIZE);
+                System.out.println("Record found:");
+                System.out.println("ID: " + id.trim());
+                System.out.println("Name: " + name.trim());
+                System.out.println("Hometown: " + hometown.trim());
+            } else {
+                System.out.println("Record with ID " + searchId + " not found.");
+            }
+            file.close();
+        } catch (IOException e) {
+            System.out.println("Error searching record: " + e.getMessage());
+        }
+    }
+
+    private static String readString(RandomAccessFile file, int length) throws IOException {
+        byte[] bytes = new byte[length];
+        file.read(bytes);
+        return new String(bytes, "UTF-8");
+    }
+
+    private static void writeRecord(RandomAccessFile file, String id, String name, String hometown) throws IOException {
+        StringBuilder idBuilder = new StringBuilder(id);
+        idBuilder.setLength(ID_SIZE);
+        StringBuilder nameBuilder = new StringBuilder(name);
+        nameBuilder.setLength(NAME_SIZE);
+        StringBuilder hometownBuilder = new StringBuilder(hometown);
+        hometownBuilder.setLength(HOMETOWN_SIZE);
+        file.write(idBuilder.toString().getBytes("UTF-8"));
+        file.write(nameBuilder.toString().getBytes("UTF-8"));
+        file.write(hometownBuilder.toString().getBytes("UTF-8"));
+    }
+
+    public static void main(String[] args) {
+        String fileName = "students.db";
+        createDatabase(fileName);
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nMenu:");
+            System.out.println("1. Add a new record");
+            System.out.println("2. Display all records");
+            System.out.println("3. Search for a record by ID");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter ID: ");
+                    String newId = scanner.next();
+                    System.out.print("Enter Name: ");
+                    String newName = scanner.next();
+                    System.out.print("Enter Hometown: ");
+                    String newHometown = scanner.next();
+                    addRecord(fileName, newId, newName, newHometown);
+                    break;
+                case 2:
+                    displayDatabase(fileName);
+                    break;
+                case 3:
+                    System.out.print("Enter ID to search: ");
+                    String id = scanner.next();
+                    searchRecord(fileName, id);
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    scanner.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+ASSIGNMENT 11 - EASY
+
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.Scanner;
+
+
+public class ass11 {
+    private static String DATABASE_FILE;
+
+    public static void main(String[] args) {
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Enter database file name: ");
+            DATABASE_FILE = scanner.nextLine();
+
+            while (true) {
+                displayMenu();
+                if (scanner.hasNextLine()) {
+                    try {
+                        int choice = Integer.parseInt(scanner.nextLine());
+                        switch (choice) {
+                            case 1 -> createDatabase();
+                            case 2 -> displayDatabase();
+                            case 3 -> addRecord(scanner);
+                            case 4 -> searchRecord(scanner);
+                            case 5 -> {
+                                System.out.println("Exiting...");
+                                return;
+                            }
+                            default -> System.out.println("Invalid choice! Please enter a number between 1 and 5.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input! Please enter a number between 1 and 5.");
+                    }
+                } else {
+                    System.out.println("Invalid input.");
+                    scanner.next(); // Consume the invalid input to avoid an infinite loop
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void displayMenu() {
+        System.out.println("\nMenu:");
+        System.out.println("1. Create Database");
+        System.out.println("2. Display Database");
+        System.out.println("3. Add Record");
+        System.out.println("4. Search Record");
+        System.out.println("5. Exit");
+        System.out.print("Enter your choice: ");
+    }
+
+    private static void createDatabase() throws IOException {
+        Path filePath = Paths.get(DATABASE_FILE);
+        if (Files.exists(filePath)) {
+            System.out.println("Database already exists.");
+        } else {
+            Files.createFile(filePath);
+            System.out.println("Database created successfully.");
+        }
+    }
+
+    private static void displayDatabase() throws IOException {
+        Files.lines(Paths.get(DATABASE_FILE)).forEach(System.out::println);
+    }
+
+    private static void addRecord(Scanner scanner) throws IOException {
+        System.out.print("Enter ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter Name: ");
+        String name = scanner.nextLine();
+        Files.write(Paths.get(DATABASE_FILE), (id + "," + name + "\n").getBytes(), StandardOpenOption.APPEND);
+        System.out.println("Record added to the database successfully.");
+    }
+
+    private static void searchRecord(Scanner scanner) throws IOException {
+        System.out.print("Enter the ID to search: ");
+        String searchId = scanner.nextLine().trim();
+        Files.lines(Paths.get(DATABASE_FILE))
+                .filter(line -> line.startsWith(searchId + ","))
+                .findFirst()
+                .ifPresentOrElse(System.out::println, () -> System.out.println("Record not found."));
+    }
+}
